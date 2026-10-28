@@ -2,102 +2,91 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>QR GENARATOR♦️ - By Sanuka</title>
+<title>QR GENARATOR♦️ - By Sanuka⭐</title>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <style>
 *{box-sizing:border-box}
-body{
-  margin:0;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;
-  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.85)), url('bg.jpg');
-  background-size:cover;background-position:center;background-attachment:fixed;
-  font-family:system-ui,sans-serif;
-}
-.card{
-  background: rgba(10,0,0,0.9);backdrop-filter: blur(14px);
-  border:1.5px solid #ff0033;padding:28px;border-radius:26px;
-  width:100%;max-width:410px;text-align:center;
-  box-shadow: 0 0 60px rgba(255,0,51,0.6);
-}
+body{margin:0;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;background:linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.85)), url('bg.jpg');background-size:cover;background-position:center;background-attachment:fixed;font-family:system-ui,sans-serif}
+.card{background:rgba(10,0,0,0.9);backdrop-filter:blur(14px);border:1.5px solid #ff0033;padding:28px;border-radius:26px;width:100%;max-width:410px;text-align:center;box-shadow:0 0 60px rgba(255,0,51,0.6)}
 h1{margin:0;color:#ff002f;text-shadow:0 0 20px red;font-size:30px}
 .sub{color:#ff99aa;margin:8px 0 22px;font-size:13px}
 input{width:100%;padding:16px;border-radius:14px;border:1px solid #ff0033;background:rgba(40,0,0,0.8);color:#fff;font-size:16px;outline:none}
 button{margin-top:16px;width:100%;padding:16px;border:none;border-radius:14px;background:linear-gradient(90deg,#ff0033,#990011);color:#fff;font-weight:bold;font-size:16px;cursor:pointer}
 #loading{display:none;margin:25px 0}
-#loading img{
-  width:140px;height:140px;border-radius:50%;
-  border:2px solid #ff0033;box-shadow:0 0 30px red;
-  object-fit:cover;
-  animation: pulse 1s infinite;
-}
+#loading img{width:140px;height:140px;border-radius:50%;border:2px solid #ff0033;box-shadow:0 0 30px red;object-fit:cover;animation:pulse 1s infinite}
 @keyframes pulse{0%,100%{transform:scale(0.95)}50%{transform:scale(1.05);box-shadow:0 0 45px red}}
 #qrcode{margin:22px auto;background:#fff;padding:14px;border-radius:18px;display:none;justify-content:center;min-height:238px;align-items:center}
 .footer{margin-top:20px;color:#ff3344;font-size:11px}
+.music-btn{position:fixed;top:15px;right:15px;background:rgba(0,0,0,0.7);border:1px solid #ff0033;color:#ff0033;width:45px;height:45px;border-radius:50%;font-size:20px;cursor:pointer;z-index:999}
 </style>
 </head>
 <body>
+
+<button class="music-btn" id="musicBtn">🎵</button>
+
+<audio id="bgMusic" loop autoplay playsinline preload="auto">
+  <source src="song.mp3" type="audio/mpeg">
+</audio>
+
 <div class="card">
-<h1>QR GENARATOR🇱🇰</h1>
+<h1>QR RED MOON</h1>
 <div class="sub">MESSAGE TO QR • BY SANUKA</div>
 <input id="text" placeholder="Enter your message...">
 <button onclick="makeQR()">GENERATE QR 🔴</button>
-
-<div id="loading">
-  <img src="./loading.jpg" alt="Loading" onerror="this.src='https://i.imgur.com/8Km9tLL.png'">
-  <p style="color:#ff99aa;margin-top:12px">wait...</p>
-</div>
-
+<div id="loading"><img src="./loading.jpg"><p style="color:#ff99aa;margin-top:12px">Summoning...</p></div>
 <div id="qrcode"></div>
 <button id="dl" style="display:none;background:#1a0000;border:1px solid #ff0033" onclick="downloadQR()">DOWNLOAD QR 📥</button>
 <div class="footer">MADE WITH ❤️ BY SANUKA🌸</div>
 </div>
 
 <script>
-let qrcodeObj = null;
-function makeQR(){
- let t=document.getElementById('text').value.trim();
- if(!t) return alert('Enter a message!');
- let qrDiv = document.getElementById('qrcode');
- let loading = document.getElementById('loading');
- loading.style.display='block';
- qrDiv.style.display='none';
- document.getElementById('dl').style.display='none';
- qrDiv.innerHTML='';
+let qr = null;
+let isPlaying = false;
+const music = document.getElementById('bgMusic');
+const btn = document.getElementById('musicBtn');
 
- setTimeout(()=>{
-  qrcodeObj = new QRCode(qrDiv,{
-    text:t,width:210,height:210,
-    colorDark:"#990011",colorLight:"#ffffff",
-    correctLevel:QRCode.CorrectLevel.H
-  });
-  loading.style.display='none';
-  qrDiv.style.display='flex';
-  document.getElementById('dl').style.display='block';
- }, 1300);
+// AUTO PLAY - GIYA GAMA
+function tryPlayMusic(){
+  music.volume = 0.35;
+  music.play().then(()=>{ isPlaying=true; btn.innerHTML="🔊"; }).catch(()=>{});
 }
+window.addEventListener('load', ()=>{
+  tryPlayMusic();
+  setTimeout(tryPlayMusic, 500);
+  setTimeout(tryPlayMusic, 1500);
+});
+['click','touchstart','scroll','keydown'].forEach(ev=>{
+  document.addEventListener(ev, ()=>{ if(!isPlaying) tryPlayMusic(); }, {once:true});
+});
+btn.addEventListener('click', ()=>{
+  if(isPlaying){ music.pause(); btn.innerHTML="🔇"; isPlaying=false; }
+  else { tryPlayMusic(); }
+});
 
+function makeQR(){
+ let t = document.getElementById('text').value.trim();
+ if(!t) return alert('Enter a message bn!');
+ document.getElementById('loading').style.display='block';
+ document.getElementById('qrcode').style.display='none';
+ document.getElementById('dl').style.display='none';
+ if(!isPlaying) tryPlayMusic();
+ setTimeout(()=>{
+   let qrDiv = document.getElementById('qrcode');
+   if(qr){ qr.clear(); qr.makeCode(t); }
+   else { qr = new QRCode(qrDiv, {text:t,width:210,height:210,colorDark:"#990011",colorLight:"#fff",correctLevel:QRCode.CorrectLevel.H}); }
+   document.getElementById('loading').style.display='none';
+   qrDiv.style.display='flex';
+   document.getElementById('dl').style.display='block';
+ }, 800);
+}
 function downloadQR(){
- let qrDiv = document.getElementById('qrcode');
- let canvas = qrDiv.querySelector('canvas');
- let img = qrDiv.querySelector('img');
- let dataUrl = "";
+ let canvas = document.querySelector('#qrcode canvas');
  if(canvas){
-   dataUrl = canvas.toDataURL("image/png");
- } else if(img && img.src){
-   // create canvas from img if only img exists
-   let c = document.createElement('canvas');
-   c.width = 500; c.height = 500;
-   let ctx = c.getContext('2d');
-   ctx.fillStyle = "#fff"; ctx.fillRect(0,0,500,500);
-   ctx.drawImage(img, 20, 20, 460, 460);
-   dataUrl = c.toDataURL("image/png");
- }
- if(dataUrl){
    let a=document.createElement('a');
-   a.href=dataUrl; a.download='QR-Sanuka1127.png'; a.click();
- } else {
-   alert('QR not ready! Generate again');
+   a.href=canvas.toDataURL("image/png");
+   a.download='QR-Sanuka-'+Date.now()+'.png'; a.click();
  }
 }
 </script>
 </body>
-                                    </html>
+  </html>
